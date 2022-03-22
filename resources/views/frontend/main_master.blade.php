@@ -8,7 +8,9 @@
 <meta name="author" content="">
 <meta name="keywords" content="MediaCenter, Template, eCommerce">
 <meta name="robots" content="all">
-<title>Ecommerce</title>
+<title>
+    @yield('page-title', 'Mini Bazar')
+</title>
 
 <!-- Bootstrap Core CSS -->
 <link rel="stylesheet" href="{{asset('frontend/assets/css/bootstrap.min.css')}}">
