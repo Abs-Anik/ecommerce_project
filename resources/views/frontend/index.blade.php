@@ -970,7 +970,7 @@
                             <!-- /.product-image -->
                             
                             <div class="product-info text-left">
-                              <h3 class="name"><a href="detail.html">
+                              <h3 class="name"><a href="{{route('product.details', ['id'=>$product->id,'slug'=>$product->product_slug_en])}}">
                                 @if (session()->get('language') == 'hindi')
                                 {{$product->product_name_hin}}
                                 @else
@@ -1054,7 +1054,7 @@
                               <!-- /.product-image -->
                               
                               <div class="product-info text-left">
-                                <h3 class="name"><a href="detail.html">
+                                <h3 class="name"><a href="{{route('product.details', ['id'=>$product->id,'slug'=>$product->product_slug_en])}}">
                                   @if (session()->get('language') == 'hindi')
                                   {{$product->product_name_hin}}
                                   @else
