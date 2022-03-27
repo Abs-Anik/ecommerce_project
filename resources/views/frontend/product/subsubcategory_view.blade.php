@@ -1,6 +1,6 @@
 @extends('frontend.main_master')
 @section('page-title')
-    Tag Wise Product
+    SubSubCategory Wise Product
 @endsection
 @section('content')
 <div class="breadcrumb">

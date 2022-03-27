@@ -398,7 +398,35 @@
 									</div>
 
 								</div><!-- /.row -->
+
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="form-group">
+											<label class="info-title control-label">Choose Color</label>
+											<select class="form-control unicase-form-control selectpicker" style="display: none;">
+												<option>--Choose Color--</option>
+												@foreach ($product_color_en as $color)
+												<option value="{{$color}}">{{$color}}</option>
+												@endforeach
+											</select>
+										</div>
+									</div>
+
+									<div class="col-sm-6">
+										<div class="form-group">
+											<label class="info-title control-label">Choose Size</label>
+											<select class="form-control unicase-form-control selectpicker" style="display: none;">
+												<option>--Choose Size--</option>
+												@foreach ($product_size_en as $size)
+												<option value="{{$size}}">{{$size}}</option>
+												@endforeach
+											</select>
+										</div>
+									</div>
+								</div>
 							</div><!-- /.price-container -->
+
+
 
 							<div class="quantity-container info-container">
 								<div class="row">
