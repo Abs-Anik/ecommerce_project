@@ -112,8 +112,10 @@ class IndexController extends Controller
         $color_hin = $product->product_color_hin;
         $product_color_hin = explode(',',$color_hin);
 
+        $cat_id = $product->category_id;
+        $relatedProducts = Product::where('status',1)->where('category_id',$cat_id)->where('id', '!=', $id)->orderBy('id','DESC')->get();
         $multiImg = MultiImg::where('product_id', $id)->get();
-        return view('frontend.product.product_details', compact('product', 'multiImg', 'product_size_hin', 'product_color_hin', 'product_size_en', 'product_color_en'));
+        return view('frontend.product.product_details', compact('product', 'multiImg', 'product_size_hin', 'product_color_hin', 'product_size_en', 'product_color_en', 'relatedProducts'));
     }
 
     public function TagWiseProduct($tag)
