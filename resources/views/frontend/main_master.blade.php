@@ -136,8 +136,8 @@
                         <label for="quantity">Quantity</label>
                         <input type="number" class="form-control" id="quantity" aria-describedby="emailHelp" value="1" min="1">
                     </div>
-
-                    <button type="submit" class="btn btn-primary">Add to Cart</button>
+                    <input type="hidden" id="product_id">
+                    <button type="submit" class="btn btn-primary" onclick="addToCart()">Add to Cart</button>
                 </div>
             </div>
         </div>
@@ -173,6 +173,8 @@
                 $('#pcategory').text(data.product.category.category_name_en);
                 $('#pbrand').text(data.product.brand.brand_name_en);
                 $('#pimage').attr('src', '/'+data.product.product_thumbnail);
+
+                $('#product_id').val(id);
 
                 //Product Price
 
@@ -223,6 +225,13 @@
             }
         });
     }
+
+    // Add To Cart
+    function addToCart()
+    {
+      alert('Hi');
+    }
+
   </script>
   
 </body>
