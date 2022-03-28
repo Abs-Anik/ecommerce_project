@@ -32,6 +32,9 @@
 <link href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,700' rel='stylesheet' type='text/css'>
 <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,400italic,600,600italic,700,700italic,800' rel='stylesheet' type='text/css'>
 <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+
+{{-- Custom Css --}}
+<link rel="stylesheet" href="{{asset('frontend/assets/css/style.css')}}">
 </head>
 <body class="cnt-home">
 <!-- ============================================== HEADER ============================================== -->
@@ -91,7 +94,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel"><span id="pname"></span></h5>
+          <h5 class="modal-title" id="exampleModalLabel"><strong><span id="pname"></span></strong></h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -100,38 +103,32 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="card" style="width: 18rem;">
-                        <img src="" class="card-img-top" src="..." alt="Card image cap" width="180px" height="200px" id="pimage">
+                        <img src="" class="card-img-top" src="..." alt="Card image cap" width="200px" height="200px" id="pimage">
                     </div>
                 </div>
                 <div class="col-md-4">
                     <ul class="list-group">
-                        <li class="list-group-item">Product Price: <span id="price"></span></li>
-                        <li class="list-group-item">Product Code: <span id="pcode"></span></li>
-                        <li class="list-group-item">Category: <span id="pcategory"></span></li>
-                        <li class="list-group-item">Brand: <span id="pbrand"></span></li>
-                        <li class="list-group-item">Stock: <span id="pstock"></span></li>
+                        <li class="list-group-item">Product Price: <strong class="text-danger">$<span id="pprice"></span></strong> <del id="oldprice"></del></li>
+                        <li class="list-group-item">Product Code: <strong id="pcode"></strong></li>
+                        <li class="list-group-item">Category: <strong id="pcategory"></strong></li>
+                        <li class="list-group-item">Brand: <strong id="pbrand"></strong></li>
+                        <li class="list-group-item">Stock:<span class="badge custom-badge badge-pill badge-success" id="available" style="background: green; color: white;"></span>
+                          <span class="badge custom-badge badge-pill badge-danger" id="stockout" style="background: red; color: white;"></span>
+                        </li>
                       </ul>
                 </div>
                 <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="exampleFormControlSelect1">Choose Color</label>
-                        <select class="form-control" id="exampleFormControlSelect1">
-                          <option>-- Select Color--</option>
-                          <option>2</option>
-                          <option>3</option>
-                          <option>4</option>
-                          <option>5</option>
+                    <div class="form-group" id="colorArea">
+                        <label for="color">Choose Color</label>
+                        <select class="form-control" id="color" name="color">
+                          
                         </select>
                     </div>
 
-                    <div class="form-group">
-                        <label for="exampleFormControlSelect1">Choose Size</label>
-                        <select class="form-control" id="exampleFormControlSelect1">
-                          <option>-- Select Size--</option>
-                          <option>2</option>
-                          <option>3</option>
-                          <option>4</option>
-                          <option>5</option>
+                    <div class="form-group" id="sizeArea">
+                        <label for="size">Choose Size</label>
+                        <select class="form-control" id="size" name="size">
+
                         </select>
                     </div>
 
@@ -176,6 +173,53 @@
                 $('#pcategory').text(data.product.category.category_name_en);
                 $('#pbrand').text(data.product.brand.brand_name_en);
                 $('#pimage').attr('src', '/'+data.product.product_thumbnail);
+
+                //Product Price
+
+                if(data.product.discount_price == null){
+                  $('#pprice').text('');
+                  $('#oldprice').text('');
+                  $('#pprice').text(data.product.selling_price);
+                }else{
+                  $('#pprice').text(data.product.discount_price);
+                  $('#oldprice').text('$'+data.product.selling_price);
+                }
+
+                //stock
+
+                if(data.product.product_qty > 0){
+                  $('#available').text('');
+                  $('#stockout').text('');
+                  $('#available').text('Available');
+                }else{
+                  $('#available').text('');
+                  $('#stockout').text('');
+                  $('#stockout').text('Stockout');
+                }
+
+                //color
+                $('select[name="color"]').empty();
+                $.each(data.color, function(key, value){
+                  $('select[name="color"]').append('<option value=" '+value+' ">'+value+'</option>')
+                  if(data.color == ""){
+                    $('#colorArea').hide();
+                  }else{
+                    $('#colorArea').show();
+                  }
+                })
+
+                //size
+                $('select[name="size"]').empty();
+                $.each(data.size, function(key, value){
+                  $('select[name="size"]').append('<option value=" '+value+' ">'+value+'</option>')
+
+                  if(data.size == ""){
+                    $('#sizeArea').hide();
+                  }else{
+                    $('#sizeArea').show();
+                  }
+                })
+
             }
         });
     }
