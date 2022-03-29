@@ -7,6 +7,7 @@ use App\Http\Controllers\Backend\CategoryController;
 use App\Http\Controllers\Backend\ProductController;
 use App\Http\Controllers\Backend\SliderController;
 use App\Http\Controllers\Backend\SubCategoryController;
+use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\IndexController;
 use App\Http\Controllers\Frontend\LanguageController;
 use App\Models\User;
@@ -142,3 +143,13 @@ Route::get('/subsubcategory/product/{id}/{slug}', [IndexController::class, 'SubS
 //Product view with Ajax
 
 Route::get('/product/view/modal/{id}', [IndexController::class, 'ProductViewAjax']);
+
+//Add To Cart With Ajax
+Route::post('/cart/data/store/{id}', [CartController::class, 'AddToCart']);
+
+// Show Mini Cart Using Ajax
+
+Route::get('/product/mini/cart', [CartController::class, 'AddMiniCart']);
+
+//Remove Mini Cart
+Route::get('minicart/product-remove/{rowId}', [CartController::class, 'RemoveMiniCart']);

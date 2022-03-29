@@ -66,6 +66,7 @@
 <script src="{{asset('frontend/assets/js/wow.min.js')}}"></script> 
 <script src="{{asset('frontend/assets/js/scripts.js')}}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 @if (Session::has('Message'))
     var type = "{{ Session::get('alert-type', 'info') }}";
@@ -95,7 +96,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel"><strong><span id="pname"></span></strong></h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closeModal">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -133,8 +134,8 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="quantity">Quantity</label>
-                        <input type="number" class="form-control" id="quantity" aria-describedby="emailHelp" value="1" min="1">
+                        <label for="qty">Quantity</label>
+                        <input type="number" class="form-control" id="qty" aria-describedby="emailHelp" value="1" min="1">
                     </div>
                     <input type="hidden" id="product_id">
                     <button type="submit" class="btn btn-primary" onclick="addToCart()">Add to Cart</button>
@@ -175,6 +176,7 @@
                 $('#pimage').attr('src', '/'+data.product.product_thumbnail);
 
                 $('#product_id').val(id);
+                $('#qty').val(1);
 
                 //Product Price
 
@@ -229,10 +231,122 @@
     // Add To Cart
     function addToCart()
     {
-      alert('Hi');
+      var product_name = $('#pname').text();
+      var id = $('#product_id').val();
+      var color = $('#color option:selected').text();
+      var size = $('#size option:selected').text();
+      var quantity = $('#qty').val();
+
+      $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        data:{
+          color: color, size: size, quantity: quantity, product_name: product_name
+        },
+        url: "/cart/data/store/"+id,
+        success: function(data){
+          //After Add to cart count
+          miniCart();
+          //After Add to cart count
+          $('#closeModal').click();
+          const Toast = Swal.mixin({
+                          toast: true,
+                          position: 'top-end',
+                          icon: 'success',
+                          background: '#FFC901',
+                          color: '#fff',
+                          showConfirmButton: false,
+                          timer: 3000
+                })
+          if($.isEmptyObject(data.error)){
+            Toast.fire({
+              type: 'success',
+              title: data.success
+            })
+          }else{
+            Toast.fire({
+              type: 'error',
+              title: data.error
+            })
+          }
+        }
+      })
     }
 
   </script>
-  
+
+  {{-- Show Cart Data in header --}}
+  <script type="text/javascript">
+  function miniCart(){
+    $.ajax({
+      type: 'GET',
+      dataType: 'json',
+      url: '/product/mini/cart',
+      success: function(response){
+        $('span[id="cartSubTotal"]').text(response.cartTotal);
+        $('#cartQty').text(response.cartQty);
+        var miniCart = "";
+        $.each(response.carts, function(key, value){
+          miniCart += `<div class="cart-item product-summary">
+                    <div class="row">
+                      <div class="col-xs-4">
+                        <div class="image"> <a href="detail.html"><img src="/${value.options.image}" alt=""></a> </div>
+                      </div>
+                      <div class="col-xs-7">
+                        <h3 class="name"><a href="index.php?page-detail">${value.name}</a></h3>
+                        <div class="price">${value.price} * ${value.qty}</div>
+                      </div>
+                      <div class="col-xs-1 action"> 
+                        <button type="button" id="${value.rowId}" onclick="miniCartRemove(this.id)"><i class="fa fa-trash"></i></button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="clearfix"></div>
+                  <hr>`
+        });
+
+        $('#miniCart').html(miniCart);
+      }
+    })
+  }
+
+  miniCart();
+
+  // Mini Cart Remove
+
+  function miniCartRemove(rowId)
+  {
+    $.ajax({
+      type: 'GET',
+      dataType: 'json',
+      url: 'minicart/product-remove/'+rowId,
+      success: function(data){
+        miniCart();
+
+        const Toast = Swal.mixin({
+                          toast: true,
+                          position: 'top-end',
+                          icon: 'success',
+                          background: '#FFC901',
+                          color: '#fff',
+                          showConfirmButton: false,
+                          timer: 3000
+                })
+          if($.isEmptyObject(data.error)){
+            Toast.fire({
+              type: 'success',
+              title: data.success
+            })
+          }else{
+            Toast.fire({
+              type: 'error',
+              title: data.error
+            })
+          }
+      }
+    })
+  }
+
+  </script>
 </body>
 </html>

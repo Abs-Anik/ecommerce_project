@@ -113,7 +113,7 @@
 </div><!-- /.gallery-holder -->        			
 					<div class='col-sm-6 col-md-7 product-info-block'>
 						<div class="product-info">
-							<h1 class="name">
+							<h1 class="name" id="pname">
                                 @if (session()->get('language') == 'hindi')
                                 {{$product->product_name_hin}}
                                 @else
@@ -159,8 +159,6 @@
 
 							<div class="price-container info-container m-t-20">
 								<div class="row">
-									
-
 									<div class="col-sm-6">
 										<div class="price-box">
                                             @if ($product->discount_price == NULL)
@@ -191,25 +189,33 @@
 								<div class="row">
 									<div class="col-sm-6">
 										<div class="form-group">
-											<label class="info-title control-label">Choose Color</label>
-											<select class="form-control unicase-form-control selectpicker" style="display: none;">
+											@if ($product->product_color_en == NULL)
+												
+											@else
+											<label class="info-title control-label" for="color">Choose Color</label>
+											<select class="form-control unicase-form-control selectpicker" style="display: none;" name="color" id="color">
 												<option>--Choose Color--</option>
 												@foreach ($product_color_en as $color)
 												<option value="{{$color}}">{{$color}}</option>
 												@endforeach
 											</select>
+											@endif
 										</div>
 									</div>
 
 									<div class="col-sm-6">
 										<div class="form-group">
-											<label class="info-title control-label">Choose Size</label>
-											<select class="form-control unicase-form-control selectpicker" style="display: none;">
+											@if ($product->product_size_en == NULL)
+												
+											@else
+											<label class="info-title control-label" for="size">Choose Size</label>
+											<select class="form-control unicase-form-control selectpicker" style="display: none;" name="size" id="size">
 												<option>--Choose Size--</option>
 												@foreach ($product_size_en as $size)
 												<option value="{{$size}}">{{$size}}</option>
 												@endforeach
 											</select>
+											@endif
 										</div>
 									</div>
 								</div>
@@ -221,7 +227,7 @@
 								<div class="row">
 									
 									<div class="col-sm-2">
-										<span class="label">Qty :</span>
+										<span class="label" for="qty">Qty :</span>
 									</div>
 									
 									<div class="col-sm-2">
@@ -231,13 +237,13 @@
 								                  <div class="arrow plus gradient"><span class="ir"><i class="icon fa fa-sort-asc"></i></span></div>
 								                  <div class="arrow minus gradient"><span class="ir"><i class="icon fa fa-sort-desc"></i></span></div>
 								                </div>
-								                <input type="text" value="1">
+								                <input type="number" value="1" min="1" id="qty" name="qty">
 							              </div>
 							            </div>
 									</div>
-
+									<input type="hidden" id="product_id" value="{{$product->id}}" min="1">
 									<div class="col-sm-7">
-										<a href="#" class="btn btn-primary"><i class="fa fa-shopping-cart inner-right-vs"></i> ADD TO CART</a>
+										<button type="submit" onclick="addToCart()" class="btn btn-primary"><i class="fa fa-shopping-cart inner-right-vs"></i> ADD TO CART</button>
 									</div>
 
 									
