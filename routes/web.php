@@ -10,6 +10,7 @@ use App\Http\Controllers\Backend\SubCategoryController;
 use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\IndexController;
 use App\Http\Controllers\Frontend\LanguageController;
+use App\Http\Controllers\User\WishListController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -153,3 +154,16 @@ Route::get('/product/mini/cart', [CartController::class, 'AddMiniCart']);
 
 //Remove Mini Cart
 Route::get('minicart/product-remove/{rowId}', [CartController::class, 'RemoveMiniCart']);
+
+//Wish List
+Route::post('/add-to-wishlist/{productId}', [CartController::class, 'AddToWishList']);
+Route::group(['prefix' => 'user', 'middleware' => ['user', 'auth'], 'namespace' => 'User'], function(){
+    //Wish List Page
+    Route::get('/wishlist', [WishListController::class, 'ViewWishList'])->name('wishlist');
+
+    //Wish List
+    Route::get('/get-wishlist-product', [WishListController::class, 'GetWishListProduct']);
+
+    //Wish List Remove
+    Route::get('/wishlist-remove/{rowId}', [WishListController::class, 'RemoveWishListProduct']);
+});
