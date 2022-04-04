@@ -322,7 +322,6 @@
       url: 'minicart/product-remove/'+rowId,
       success: function(data){
         miniCart();
-
         const Toast = Swal.mixin({
                           toast: true,
                           position: 'top-end',
@@ -473,8 +472,8 @@
           $.each(response.carts, function(key, value){
             console.log(value);
             rows += `<tr>
-					<td class="col-md-2"><img src="/${value.options.image}" alt="imga"></td>
-					<td class="col-md-7">
+					<td class="col-md-2"><img src="/${value.options.image}" alt="imga" style="width: 60px; height: 60px;"></td>
+					<td class="col-md-2">
 						<div class="product-name"><a href="#">${value.name}</a></div>
 						<div class="price">
 
@@ -482,9 +481,27 @@
 
 						</div>
 					</td>
-					<td class="col-md-1 close-btn">
-						<button type="submit" id="${value.id}" onclick="wishListRemove(this.id)" class=""><i class="fa fa-times"></i></button>
+
+          <td class="col-md-2">
+            ${value.options.color  == null ? `<span>...</span>` :  `<span class="badge badge-primary">${value.options.color}</span>`}
 					</td>
+          <td class="col-md-2">
+            ${value.options.size  == null ? `<span>...</span>` :  `<span class="badge badge-info">${value.options.size}</span>`}
+					</td>
+          <td class="col-md-2">
+            ${value.qty > 1? `<button type="submit" class="btn btn-danger btn-sm" id="${value.rowId}" onclick="cartDecrement(this.id)">-</button>` : `<button type="submit" class="btn btn-danger btn-sm" disabled>-</button>` }
+                <input type="text" value="${value.qty}" min="1" max="100" disabled style="width:25px; padding: 4px 6px; font-size: 12px; line-height: 1.5; border-radius: 3px;">
+            <button type="submit" class="btn btn-success btn-sm" id="${value.rowId}" onclick="cartIncrement(this.id)">+</button>
+					</td>
+
+          <td class="col-md-2">
+            <strong>${value.subtotal}</strong>
+					</td>
+
+					<td class="col-md-1 close-btn">
+						<button type="submit" id="${value.rowId}" onclick="cartRemove(this.id)" class=""><i class="fa fa-times"></i></button>
+					</td>
+
 				</tr>`
           });
   
@@ -496,15 +513,15 @@
 
     // Wish List Remove
 
-    function wishListRemove(rowId)
+    function cartRemove(rowId)
   {
     $.ajax({
       type: 'GET',
       dataType: 'json',
-      url: '/user/wishlist-remove/'+rowId,
+      url: '/user/cart-remove/'+rowId,
       success: function(data){
-        wishList();
-
+        cart();
+        miniCart();
         const Toast = Swal.mixin({
                           toast: true,
                           position: 'top-end',
@@ -527,6 +544,38 @@
             })
           }
       }
+    })
+  }
+
+  // Cart Increment
+
+  function cartIncrement(rowId)
+  {
+    $.ajax({
+      type: 'GET',
+      dataType: 'json',
+      url: '/cart-increment/'+rowId,
+      success: function(data){
+        cart();
+        miniCart();
+      }
+
+    })
+  }
+
+    // Cart Decrement
+
+    function cartDecrement(rowId)
+  {
+    $.ajax({
+      type: 'GET',
+      dataType: 'json',
+      url: '/cart-decrement/'+rowId,
+      success: function(data){
+        cart();
+        miniCart();
+      }
+
     })
   }
   </script>
