@@ -389,7 +389,7 @@
         }
       });
     });
-  </script>
+</script>
 
 <script type="text/javascript">
     function mainThamUrl(input){
