@@ -520,8 +520,11 @@
       dataType: 'json',
       url: '/user/cart-remove/'+rowId,
       success: function(data){
+        couponCalculation();
         cart();
         miniCart();
+        $('#couponField').show();
+        $('#coupon_name').val('');
         const Toast = Swal.mixin({
                           toast: true,
                           position: 'top-end',
@@ -556,6 +559,7 @@
       dataType: 'json',
       url: '/cart-increment/'+rowId,
       success: function(data){
+        couponCalculation();
         cart();
         miniCart();
       }
@@ -572,12 +576,139 @@
       dataType: 'json',
       url: '/cart-decrement/'+rowId,
       success: function(data){
+        couponCalculation();
         cart();
         miniCart();
       }
 
     })
   }
+  </script>
+
+{{-- Apply Coupon --}}
+  <script type="text/javascript">
+  
+  function applyCuopon()
+  {
+    var coupon_name = $('#coupon_name').val();
+    $.ajax({
+      type: 'POST',
+      dataType: 'json',
+      data: {coupon_name: coupon_name},
+      url: '/cuopon-apply',
+      success: function(data){
+        couponCalculation();
+        $('#couponField').hide();
+        const Toast = Swal.mixin({
+                          toast: true,
+                          position: 'top-end',
+                          background: '#FFC901',
+                          color: '#fff',
+                          showConfirmButton: false,
+                          timer: 3000
+                })
+              if($.isEmptyObject(data.error)){
+                Toast.fire({
+                  type: 'success',
+                  icon: 'success',
+                  title: data.success
+                })
+              }else{
+                Toast.fire({
+                  type: 'error',
+                  icon: 'error',
+                  title: data.error
+                })
+              }
+      }
+    })
+  }
+
+  function couponCalculation()
+  {
+    $.ajax({
+      type: 'GET',
+      dataType: 'json',
+      url:'/coupon-calculation',
+      success:function(data){
+        if(data.total){
+          $('#couponCalField').html(
+            `<tr>
+              <th>
+                <div class="cart-sub-total">
+                  Subtotal<span class="inner-left-md">$ ${data.total}</span>
+                </div>
+                <div class="cart-grand-total">
+                  Grand Total<span class="inner-left-md">$ ${data.total}</span>
+                </div>
+              </th>
+            </tr>`
+          )
+        }else{
+          $('#couponCalField').html(
+            `<tr>
+              <th>
+                <div class="cart-sub-total">
+                  Subtotal<span class="inner-left-md">$ ${data.subtotal}</span>
+                </div>
+                <div class="cart-sub-total">
+                  Coupon<span class="inner-left-md">$ ${data.coupon_name}</span>
+                  <button type="submit" onclick="couponRemove()" class="btn btn-warning btn-sm"><i class="fa fa-times"></i></button>
+                </div>
+                <div class="cart-sub-total">
+                  Discount Amount<span class="inner-left-md">$ ${data.discount_amount}</span>
+                </div>
+                <div class="cart-sub-total">
+                  Grand Total<span class="inner-left-md">$ ${data.total_amount}</span>
+                </div>
+              </th>
+            </tr>`
+          )
+        }
+      }
+    });
+  }
+  couponCalculation();
+  </script>
+
+  {{-- Coupon Remove --}}
+
+  <script type="text/javascript">
+    function couponRemove(){
+      $.ajax({
+        type:'GET',
+        dataType:'json',
+        url:'/coupon-remove',
+        success:function(data)
+        {
+          couponCalculation();
+          $('#couponField').show();
+          $('#coupon_name').val('');
+
+          const Toast = Swal.mixin({
+                          toast: true,
+                          position: 'top-end',
+                          background: '#FFC901',
+                          color: '#fff',
+                          showConfirmButton: false,
+                          timer: 3000
+                })
+              if($.isEmptyObject(data.error)){
+                Toast.fire({
+                  type: 'success',
+                  icon: 'success',
+                  title: data.success
+                })
+              }else{
+                Toast.fire({
+                  type: 'error',
+                  icon: 'error',
+                  title: data.error
+                })
+              }
+        }
+      })
+    }
   </script>
 </body>
 </html>
