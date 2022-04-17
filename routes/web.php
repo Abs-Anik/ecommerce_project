@@ -13,6 +13,7 @@ use App\Http\Controllers\CartPageController;
 use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\IndexController;
 use App\Http\Controllers\Frontend\LanguageController;
+use App\Http\Controllers\User\CheckoutController;
 use App\Http\Controllers\User\WishListController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -226,4 +227,10 @@ Route::post('/cuopon-apply', [CartController::class, 'CuoponApply']);
 Route::get('/coupon-calculation', [CartController::class, 'CuoponCalculation']);
 Route::get('/coupon-remove', [CartController::class, 'CuoponRemove']);
 
+//checkout
 
+Route::get('/checkout', [CartController::class, 'CheckOut'])->name('checkout');
+Route::post('/checkout/store', [CartController::class, 'CheckOutStore'])->name('checkout.store');
+
+Route::get('/district-get/ajax/{division_id}', [CheckoutController::class, 'GetDistrict']);
+Route::get('/state-get/ajax/{district_id}', [CheckoutController::class, 'GetState']);

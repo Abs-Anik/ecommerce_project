@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\Coupon;
 use App\Models\Product;
+use App\Models\ShipDivision;
 use App\Models\WishList;
 use Carbon\Carbon;
 use Gloudemans\Shoppingcart\Facades\Cart;
@@ -138,5 +139,59 @@ class CartController extends Controller
     {
         Session::forget('coupon');
         return response()->json(['success' => 'Coupon Removed Successfully']);
+    }
+
+    public function CheckOut()
+    {
+        if(Auth::check()){
+
+            if(Cart::total() > 0){
+
+                $carts = Cart::content();
+                $cartQty = Cart::count();
+                $cartTotal = Cart::total();
+                $divisions = ShipDivision::orderBy('division_name', 'ASC')->get();
+                return view('frontend.checkout.checkout_view', compact('carts', 'cartQty', 'cartTotal', 'divisions'));
+
+            }else{
+                $notification = array(
+                    'Message' => 'Shopping At Least One Product',
+                    'alert-type' => 'error'
+                );
+        
+                return redirect()->to('/')->with($notification);
+            }
+
+        }else{
+        $notification = array(
+            'Message' => 'You Need To Login First',
+            'alert-type' => 'error'
+        );
+
+        return redirect()->route('login')->with($notification);
+        }
+    }
+
+    public function CheckOutStore(Request $request)
+    {
+        $data = array();
+        $data['shipping_name'] = $request->shipping_name;
+        $data['shipping_email'] = $request->shipping_email;
+        $data['shipping_phone'] = $request->shipping_phone;
+        $data['post_code'] = $request->post_code;
+        $data['division_id'] = $request->division_id;
+        $data['district_id'] = $request->district_id;
+        $data['state_id'] = $request->state_id;
+        $data['notes'] = $request->notes;
+
+        if($request->payment_method == 'stripe')
+        {
+            return view('frontend.payment.stripe', compact('data'));
+        }elseif($request->payment_method == 'card')
+        {
+            return 'card';
+        }else{
+            return 'cash';
+        }
     }
 }
