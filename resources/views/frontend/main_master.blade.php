@@ -35,6 +35,7 @@
 
 {{-- Custom Css --}}
 <link rel="stylesheet" href="{{asset('frontend/assets/css/style.css')}}">
+<script src="https://js.stripe.com/v3/"></script>
 </head>
 <body class="cnt-home">
 <!-- ============================================== HEADER ============================================== -->
