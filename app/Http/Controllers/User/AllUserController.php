@@ -21,8 +21,8 @@ class AllUserController extends Controller
 
     public function OrderDetails($order_id)
     {
-        $order = Order::where('id', $order_id)->where('user_id', Auth::id())->first();
-        $orderItems = OrderItem::where('order_id', $order_id)->orderBy('id', 'DESC')->get();
+        $order = Order::with('division', 'district', 'state', 'user')->where('id', $order_id)->where('user_id', Auth::id())->first();
+        $orderItems = OrderItem::with('product')->where('order_id', $order_id)->orderBy('id', 'DESC')->get();
         return view('frontend.user.order.order_detail', compact('order', 'orderItems'));
     }
 }
