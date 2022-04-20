@@ -69,10 +69,13 @@
                                     <th>Payment Type : </th>
                                     <th>{{$order->payment_method}}</th>
                                 </tr>
+                                @if (!empty($order->transaction_id))
                                 <tr>
                                     <th>Tranx ID : </th>
                                     <th>{{$order->transaction_id}}</th>
                                 </tr>
+                                @endif
+
                                 <tr>
                                     <th>Invoice : </th>
                                     <th class="text-danger">{{$order->invoice_no}}</th>
