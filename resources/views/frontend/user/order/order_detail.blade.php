@@ -176,6 +176,15 @@
                           </div>
                     </div>
                 </div>
+
+                @if ($order->status !== "delivered")
+                  
+                @else
+                  <div class="form-group">
+                    <label for="return_reason">Order Return Reason</label>
+                    <textarea name="return_reason" class="form-control" id="return_reason" cols="30" rows="05">Return Reason</textarea>
+                  </div>
+                @endif
             </div>
         </div>
     </div>
